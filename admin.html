@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Panel - Hotel Management</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .admin-form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+      }
+      .admin-event {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        color: #1a1a1a;
+
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+      button {
+        background: #1a1a1a;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background: #333;
+      }
+
+
+/* Container Utama Superadmin */
+.super-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    margin: 20px 0;
+    border: 2px solid #ffd700; /* Warna Emas untuk eksklusivitas */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+
+}
+
+/* Garis dekoratif di pinggir */
+.super-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px; height: 100%;
+    background: #ffd700;
+}
+
+.super-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.icon-shield {
+    font-size: 24px;
+    background: #fff9e6;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.super-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.super-desc {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* Form Group */
+.super-form-group {
+    display: flex;
+    gap: 10px;
+}
+
+.super-form-group input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.super-form-group input:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+.super-form-group button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.super-form-group button:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.feedback-msg {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+
+    </style>
+  </head>
+  <body>
+<header>
+  <div class="header-left">
+    <h1>Admin Panel</h1>
+    <p>Update Room & Event Status</p>
+  </div>
+  <div class="header-right">
+    <a href="index.html" style="color: white; text-decoration: none; margin-right: 20px;">View Lobby ↗</a>
+    <button id="btnLogout" style="background: #ff4d4d; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+      Logout
+    </button>
+  </div>
+</header>
+
+    <div class="admin-form">
+      <h3>Pengaturan Profil Hotel</h3>
+      <p id="status-profil" style="font-size: 12px; color: green"></p>
+      <input type="text" id="newHotelName" />
+      <input type="text" id="newHotelJargon" />
+      <button id="btnUpdateProfile">Update Profil</button>
+    </div>
+
+        <div class="admin-event">
+      <h3>Daftar Acara Saat Ini</h3>
+      <div id="admin-event-list">
+        <!-- Daftar acara akan muncul di sini -->
+      </div>
+    </div>
+
+    <div class="admin-form">
+      <h3>Input Data Acara Baru</h3>
+      <form id="event-form">
+        <div class="form-group">
+          <label>Nama Ballroom/Meeting Room</label>
+          <input type="text" id="roomName" required />
+        </div>
+        <div class="form-group">
+          <label>Lantai</label>
+          <input type="text" id="floor" required />
+        </div>
+        <div class="form-group">
+          <label>Nama Acara</label>
+          <input type="text" id="eventName" required />
+        </div>
+        <div class="form-group">
+          <label>Jenis Acara</label>
+          <input
+            type="text"
+            id="eventType"
+            placeholder="Contoh: Wedding, Seminar"
+          />
+        </div>
+        <div class="form-group">
+          <label>Kapasitas</label>
+          <input type="number" id="capacity" />
+        </div>
+        <div class="form-group">
+          <label>Deskripsi</label>
+          <textarea id="description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>URL Foto Ruangan (Contoh: https://images.com/foto.jpg)</label>
+          <input
+            type="url"
+            id="imageUrlInput"
+            placeholder="Masukkan link gambar langsung"
+          />
+        </div>
+        <div class="form-group">
+          <label>Tanggal Mulai</label>
+          <input type="date" id="startDate" />
+        </div>
+        <div class="form-group">
+          <label>Tanggal Selesai</label>
+          <input type="date" id="endDate" />
+        </div>
+        <div class="form-group">
+          <label>Jam (Mulai - Selesai)</label>
+          <div style="display: flex; gap: 10px">
+            <input type="time" id="startTime" />
+            <input type="time" id="endTime" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="status">
+            <option value="Available">Available</option>
+            <option value="Booked">Booked</option>
+          </select>
+        </div>
+        <button type="submit" id="submitBtn">Simpan Data</button>
+      </form>
+    </div>
+
+
+
+
+<div id="superadmin-section" class="super-card" style="display: none;">
+    <div class="super-header">
+        <div class="icon-shield">🛡️</div>
+        <h3>Superadmin Control Panel</h3>
+    </div>
+    <p class="super-desc">Otorisasi email admin baru agar mereka dapat mendaftar ke sistem.</p>
+    
+    <div class="super-form-group">
+        <input type="email" id="newAdminEmail" placeholder="Masukkan email calon admin...">
+        <button id="btnAddWhitelist">Izinkan Akses</button>
+    </div>
+    
+    <div id="whitelist-feedback" class="feedback-msg"></div>
+</div>
+
+
+
+
+
+
+    <!-- Input tersembunyi untuk menyimpan ID saat mode edit -->
+    <input type="hidden" id="edit-id" />
+    <p
+      id="edit-indicator"
+      style="display: none; color: orange; font-weight: bold"
+    >
+      Sedang Mengedit Data...
+      <button
+        type="button"
+        id="cancel-edit"
+        style="width: auto; padding: 2px 10px; background: gray"
+      >
+        Batal
+      </button>
+    </p>
+
+
+
+
+
+    <script type="module" src="admin.js"></script>
+  </body>
+</html>

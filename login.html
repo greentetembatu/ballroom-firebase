@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Admin - Hotel</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container { max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email Admin" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button type="submit" id="login-btn">Login</button>
+            <a href="register.html"><button type="button" id="login-register">daftar</button></a> 
+        </form>
+    </div>
+    <script type="module" src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Lobby Display</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hotel-header">
+  <div class="header-left">
+    <h1 id="hotel-name"></h1>
+    <p id="hotel-jargon"></p>
+  </div>
+
+  <div class="header-right">
+    <div class="clock-wrap">
+      <span class="clock-icon">🕒</span>
+      <h2 id="clock"></h2>
+    </div>
+    <p id="date"></p>
+  </div>
+</header>
+
+<main id="event-container" class="event-grid"></main>
+
+<!-- MODAL -->
+<div id="details-modal" class="modal">
+  <div class="modal-content">
+    <button class="close-button">✕ TUTUP</button>
+
+    <div class="modal-image">
+      <!-- image injected -->
+    </div>
+
+    <div id="modal-body" class="modal-info">
+      <!-- text injected -->
+    </div>
+  </div>
+</div>
+
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

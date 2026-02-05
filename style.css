@@ -1,0 +1,429 @@
+:root {
+  --bg: #0b1220;
+  --panel: #111827;
+  --panel-soft: #1f2937;
+  --gold: #fbbf24;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --accent: #6366f1;
+}
+
+body {
+  background: linear-gradient(180deg, #020617, #0b1220);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== HEADER ===== */
+.hotel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 28px; /* 🔽 lebih tipis */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  background: linear-gradient(180deg, #020617, #0b1220);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid rgb(255, 255, 255);
+}
+
+/* ===== LEFT ===== */
+.header-left h1 {
+  color: var(--gold);
+  font-size: 2rem; /* 🔽 */
+  letter-spacing: 0.8px;
+  line-height: 0.5;
+}
+
+.header-left p {
+  color: var(--gold);
+  font-size: 1rem; /* 🔽 */
+  margin-top: 2px;
+  line-height: 0.1;
+}
+
+/* ===== RIGHT ===== */
+.header-right {
+  margin-right: 2rem; /* 🔽 */
+  line-height: 0.1;
+  margin-right: 4rem;
+}
+
+.header-right h2 {
+  color: var(--gold);
+  font-size: 1.5rem; /* 🔽 */
+  line-height: 0.1;
+
+}
+
+.header-right p {
+  color: var(--text);
+  font-size: 1rem; /* 🔽 */
+  margin-top: 2px;
+  line-height: 0.1;
+}
+
+/* ===== CLOCK ===== */
+.clock-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* 🔽 */
+}
+
+#clock {
+  font-size: 22px; /* 🔽 */
+  color: var(--gold);
+}
+
+/* ===== GRID ===== */
+.event-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 15px;
+  padding-top: 110px; /* sebelumnya 140px */
+
+}
+
+
+
+
+
+
+.event-card {
+  display: flex;
+  gap: 5px;
+  background: linear-gradient(145deg, #0f172a, #020617);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+
+  border: 1px solid rgba(251, 191, 36, 0.18);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+  transition: transform 0.35s ease, border-color 0.35s ease;
+
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.card-image {
+  width: 230px;
+  flex-shrink: 0;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 18px;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 15px 10px;
+  flex: 1;
+}
+
+.status-badge {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: bold;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+/* Status Variants */
+.status-badge.available {
+  background: rgba(34,197,94,.15);
+  color: #4ade80;
+}
+
+.status-badge.occupied {
+  background: rgba(79,70,229,.2);
+  color: #c7d2fe;
+}
+
+.status-badge.pending {
+  background: rgba(234,179,8,.2);
+  color: #fde68a;
+}
+.status-badge.booked {
+  background: red;
+}
+
+
+.card-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 2px 0 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.979);
+
+}
+
+.event-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #e5e7eb;
+  margin-bottom: 6px;
+  line-height: 1.1;
+
+}
+
+.start-date,
+.start-time,
+.end-date,
+.end-time {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 0.1;
+}
+
+/* sedikit penekanan visual */
+.start-date::before { content: "📅 "; }
+.start-time::before { content: "⏰ "; }
+.end-date::before   { content: "📅 "; }
+.end-time::before   { content: "⏰ "; }
+
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.979);
+}
+
+.card-meta span {
+  font-size: 12px;
+  color: #fbbf24;
+}
+
+.detail-hint {
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+
+
+
+
+
+
+
+/* ===== MODAL ===== */
+/* ===== MODAL BACKDROP ===== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.92);
+  z-index: 1000;
+}
+
+/* ===== MODAL BOX ===== */
+.modal-content {
+  margin: 6vh auto;
+  width: 95%;
+  max-width: 1200px;
+  height: 88vh;
+  background: var(--panel);
+  border-radius: 24px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ===== IMAGE ===== */
+.modal-image {
+  width: 50%;
+}
+
+.modal-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== INFO ===== */
+.modal-info {
+  width: 50%;
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+/* ===== STATUS BADGE ===== */
+.modal-status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .4px;
+}
+
+.modal-status.available {
+  background: rgba(34,197,94,.15);
+  color: #4ade80;
+}
+
+.modal-status.occupied {
+  background: rgba(79,70,229,.2);
+  color: #c7d2fe;
+}
+
+.modal-status.pending {
+  background: rgba(234,179,8,.2);
+  color: #fde68a;
+}
+
+.modal-status.booked {
+  background: rgba(239,68,68,.2);
+  color: #fecaca;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  margin: 14px 0 6px;
+  font-size: 16px;
+  color: var(--gold);
+}
+
+/* ===== TABLE ===== */
+.detail-table {
+  width: 100%;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.detail-table td {
+  padding: 3px 0;
+}
+
+.detail-table td:first-child {
+  width: 40%;
+  color: var(--gold);
+  opacity: .85;
+}
+
+/* ===== INFO BOX ===== */
+.modal-boxes {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.info-box {
+  flex: 1;
+  background: var(--panel-soft);
+  padding: 12px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.info-box span {
+  display: block;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.info-box strong {
+  font-size: 18px;
+  color: var(--gold);
+}
+
+/* ===== DESCRIPTION ===== */
+.info-details {
+  margin-top: 14px;
+}
+
+.info-details span {
+  font-size: 14px;
+  color: var(--gold);
+}
+
+.info-details p {
+  margin: 4px 0 0;
+  line-height: 1.4;
+  opacity: .9;
+}
+
+/* ===== CLOSE BUTTON ===== */
+.close-button {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.btn-delete {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-delete:hover {
+  background: #cc0000;
+}
