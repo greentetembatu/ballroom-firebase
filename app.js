@@ -51,7 +51,7 @@ card.innerHTML = `
     <h3>${data.roomName}</h3>
     <span>🟡  ${data.floor}</span>
 
-    <p class="event-title">${data.eventName}</p>
+    <p class="event-title">${data.eventType}</p>
     <p class="start-date">Tanggal Mulai : ${data.startDate}</P>
     <p class="start-time">Waktu Mulai : ${data.startTime}</P>
     <p class="end-date">Tanggal Selesai : ${data.endDate}</P>
@@ -99,30 +99,54 @@ function showModal(data) {
       </span>
     </div>
 
-    <h4 class="section-title">Rincian Acara Terjadwal</h4>
+    <h4 class="section-title">Rincian Acara Terjadwal :</h4>
 
     <table class="detail-table">
-      <tr><td>Nama Acara</td><td>${data.eventName}</td></tr>
-      <tr><td>Jenis Acara</td><td>${data.eventType}</td></tr>
-      <tr><td>Tanggal Mulai</td><td>${data.startDate}</td></tr>
-      <tr><td>Waktu Mulai</td><td>${data.startTime}</td></tr>
-      <tr><td>Tanggal Selesai</td><td>${data.endDate}</td></tr>
-      <tr><td>Waktu Selesai</td><td>${data.endTime}</td></tr>
+<tr>
+  <td>Nama Acara</td>
+  <td class="colon">:</td>
+  <td>${data.eventName}</td>
+</tr>
+<tr>
+  <td>Jenis Acara</td>
+  <td class="colon">:</td>
+  <td>${data.eventType}</td>
+</tr>
+<tr>
+  <td>Tanggal Mulai</td>
+  <td class="colon">:</td>
+  <td>${data.startDate}</td>
+</tr>
+<tr>
+  <td>Waktu Mulai</td>
+  <td class="colon">:</td>
+  <td>${data.startTime}</td>
+</tr>
+<tr>
+  <td>Tanggal Selesai</td>
+  <td class="colon">:</td>
+  <td>${data.endDate}</td>
+</tr>
+<tr>
+  <td>Waktu Selesai</td>
+  <td class="colon">:</td>
+  <td>${data.endTime}</td>
+</tr>
     </table>
 
     <div class="modal-boxes">
       <div class="info-box">
-        <span>Lantai</span>
+        <span>Lantai : </span>
         <strong>${data.floor}</strong>
       </div>
       <div class="info-box">
-        <span>Kapasitas</span>
+        <span>Kapasitas : </span>
         <strong>${data.capacity} Guest</strong>
       </div>
     </div>
 
     <div class="info-details">
-      <span>Deskripsi</span>
+      <span>Deskripsi : </span>
       <p>${data.description}</p>
     </div>
   `;
