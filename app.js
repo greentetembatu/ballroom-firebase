@@ -5,6 +5,9 @@ import {
   query,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+
+
+
 // 1. Fungsi Jam Digital
 function updateClock() {
   const now = new Date();
@@ -22,22 +25,43 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 
-// 2. Ambil Data dari Firestore secara Real-time
-const eventContainer = document.getElementById("event-container");
 
+
+
+
+
+
+
+// 2. Ambil Data dari Firestore secara Real-time
+let allEventsData = []; // Menyimpan data untuk navigasi
+let currentIndex = 0;
+let autoModalTimer;
+let slideInterval;
+let scrollInterval;
+
+const eventContainer = document.getElementById("event-container");
+const modal = document.getElementById("details-modal");
+
+// --- 7. AUTO FULLSCREEN (Klik di mana saja pertama kali untuk aktif) ---
+document.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(e => console.log(e));
+    }
+}, { once: true });
+
+// Ambil Data Real-time
 const q = query(collection(db, "events"));
 
 onSnapshot(q, (snapshot) => {
-  eventContainer.innerHTML = ""; // Bersihkan container sebelum render ulang
+    eventContainer.innerHTML = "";
+    allEventsData = []; // Reset array data
 
-  // app.js (Bagian render kartu)
-  snapshot.forEach((doc) => {
-    const data = doc.data();
-    const docId = doc.id; // Ambil ID unik dokumen
+    snapshot.forEach((doc) => {
+        const data = doc.data();
+        allEventsData.push(data); // Simpan ke array untuk navigasi
 
-const card = document.createElement("div");
-card.className = "event-card";
-
+        const card = document.createElement("div");
+        card.className = "event-card";
 card.innerHTML = `
   <div class="card-image">
     <img src="${data.imageUrl || "https://via.placeholder.com/400"}">
@@ -65,32 +89,46 @@ card.innerHTML = `
   </div>
 `;
 
+        card.onclick = () => {
+            currentIndex = allEventsData.indexOf(data);
+            showModal(data);
+        };
+        eventContainer.appendChild(card);
+    });
 
-    // Fungsi klik untuk buka modal
-    card.onclick = () => showModal(data);
-    eventContainer.appendChild(card);
-  });
+    // --- 6. AUTO SCROLL KARTU NAIK TURUN ---
+    startAutoScroll();
+
+    // --- 3. AUTO OPEN MODAL DALAM 2 MENIT (120000 ms) ---
+    clearTimeout(autoModalTimer);
+    autoModalTimer = setTimeout(() => {
+        if (allEventsData.length > 0) showModal(allEventsData[0]);
+    }, 10000); 
+});
 
 
 
 
-
-
-
-
-  // Fungsi menampilkan Modal
-const modal = document.getElementById("details-modal");
-const modalBody = document.getElementById("modal-body");
-const modalImage = document.querySelector(".modal-image");
-
+// Fungsi Menampilkan Modal
 function showModal(data) {
+    if (!data) return;
+    
+    const modalImage = document.querySelector(".modal-image");
+    const modalBody = document.getElementById("modal-body");
+
+// Tambahkan class animasi setiap kali ganti data
+    modalBody.classList.remove("fade-anim");
+    modalImage.classList.remove("fade-anim");
+    
+    // Trigger reflow agar animasi bisa diulang
+    void modalBody.offsetWidth;
+
   modalImage.innerHTML = `
     <img 
       src="${data.imageUrl || "https://via.placeholder.com/600"}" 
       alt="${data.roomName || "Room Image"}"
     >
   `;
-
   modalBody.innerHTML = `
     <div class="modal-header">
       <h2>${data.roomName}</h2>
@@ -151,19 +189,184 @@ function showModal(data) {
     </div>
   `;
 
+// Pasang kembali class animasi
+    modalBody.classList.add("fade-anim");
+    modalImage.classList.add("fade-anim");
+
   modal.style.display = "block";
+    
+    // --- 4. AUTO SLIDE MODAL (Pindah tiap 5 detik) ---
+    startAutoSlide();
 }
 
-// Tutup modal
-document.querySelector(".close-button").onclick = () => {
-  modal.style.display = "none";
+// --- 1. NAVIGASI KIRI KANAN ---
+document.querySelector(".next-btn").onclick = (e) => {
+    e.stopPropagation();
+    changeSlide(1);
+};
+document.querySelector(".prev-btn").onclick = (e) => {
+    e.stopPropagation();
+    changeSlide(-1);
 };
 
+function changeSlide(direction) {
+    currentIndex += direction;
+    
+    // --- 5. AUTO CLOSE JIKA KARTU HABIS ---
+    if (currentIndex >= allEventsData.length || currentIndex < 0) {
+        closeMyModal();
+    } else {
+        showModal(allEventsData[currentIndex]);
+    }
+}
+
+function startAutoSlide() {
+    clearInterval(slideInterval);
+    
+    // Reset Progress Bar
+    const bar = document.getElementById("progress-bar");
+    if (bar) {
+        bar.style.transition = "none";
+        bar.style.width = "0%";
+        setTimeout(() => {
+            bar.style.transition = "width 5s linear";
+            bar.style.width = "100%";
+        }, 50);
+    }
+
+    slideInterval = setInterval(() => {
+        changeSlide(1);
+    }, 5000); 
+}
+// --- 2. CLOSE KLIK DIMANA SAJA ---
 window.onclick = (e) => {
-  if (e === modal) modal.style.display = "none";
+    if (e.target == modal || e.target.classList.contains('close-button')) {
+        closeMyModal();
+    }
 };
 
-});
+function closeMyModal() {
+    modal.style.display = "none";
+    clearInterval(slideInterval);
+    currentIndex = 0; 
+    
+    // Mulai scroll lagi dari awal
+    startAutoScroll(); 
+}
+
+
+// --- 6. LOGIKA AUTO SCROLL ---
+function startAutoScroll() {
+    clearInterval(scrollInterval);
+    let direction = 1; 
+    let frameCounter = 0; // Penghitung frame untuk mengatur kecepatan
+
+    scrollInterval = setInterval(() => {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        
+        // 1. CEK JIKA MENYENTUH BATAS BAWAH
+        if (scrollTop + clientHeight >= scrollHeight - 1) {
+            if (direction === 1) {
+                console.log("Sampai bawah, timer auto-open dimulai...");
+                startAutoOpenLogic();
+            }
+            direction = -1; 
+        }
+        
+        // 2. CEK JIKA MENYENTUH BATAS ATAS
+        if (scrollTop <= 0) {
+            direction = 1;
+        }
+        
+        // LOGIKA KECEPATAN:
+        // frameCounter % 3 artinya hanya bergerak setiap 3 kali interval.
+        // Semakin besar angka 3, maka akan semakin LAMBAT.
+        // Gunakan 2 jika ingin sedikit lebih cepat, gunakan 4 jika ingin sangat lambat.
+        frameCounter++;
+        if (frameCounter % 3 === 0) {
+            window.scrollBy(0, direction * 1); 
+        }
+
+    }, 20); // Interval tetap rapat (20ms) agar transisi antar pixel tidak terlihat patah
+}
+
+
+
+
+
+
+// Deklarasi variabel timer di bagian atas script
+let autoOpenTimer; 
+
+function startAutoOpenLogic() {
+    // Bersihkan timer lama jika ada agar tidak bentrok
+    clearTimeout(autoOpenTimer);
+
+    autoOpenTimer = setTimeout(() => {
+        // Cek jika modal sedang TIDAK terbuka
+        if (modal.style.display !== "block" && allEventsData.length > 0) {
+            console.log("Triggering Auto Open...");
+            currentIndex = 0; 
+            showModal(allEventsData[currentIndex]);
+            
+            // Opsional: Berhentikan scroll saat modal terbuka agar tidak pusing
+            clearInterval(scrollInterval); 
+        }
+    }, 10000); // 10 detik setelah sampai bawah
+}
+
+
+
+
+
+
+
+
+
+
+
+function hideAllScrollbars() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* 1. Hilangkan visual batang scroll secara total */
+        html::-webkit-scrollbar, 
+        body::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            background: transparent !important;
+        }
+
+        /* 2. Sembunyikan untuk Firefox & IE */
+        html, body {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        /* 3. KUNCI: Tetap izinkan scroll secara fungsional */
+        html {
+            overflow: -moz-scrollbars-none; /* Fix khusus Firefox lama */
+            overflow-y: scroll !important;  /* WAJIB: agar JS bisa scroll */
+            height: 100%;
+        }
+
+        body {
+            overflow-y: auto !important;
+            min-height: 100vh;
+            margin: 0;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+hideAllScrollbars();
+
+
+
+
+
+
+
 
 
 
@@ -194,3 +397,13 @@ async function loadHotelProfile() {
 
 // Jalankan fungsi saat halaman dibuka
 loadHotelProfile();
+
+
+
+
+
+
+
+
+
+
